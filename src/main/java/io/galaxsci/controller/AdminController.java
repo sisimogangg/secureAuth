@@ -12,7 +12,7 @@ import io.galaxsci.model.User;
 import io.galaxsci.repository.UserRepository;
 
 @RestController
-@RequestMapping("/secure/rest")
+@RequestMapping("/api/admin")
 public class AdminController {
 
 	@Autowired
@@ -21,8 +21,8 @@ public class AdminController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	@PostMapping("/admin/add")
+	//@PreAuthorize("hasAnyRole('ADMIN')")
+	@PostMapping("/add")
 	public String addUserByAdmin(@RequestBody User user) {
 		
 		String password = user.getPassword();

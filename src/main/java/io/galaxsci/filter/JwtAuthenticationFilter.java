@@ -1,5 +1,8 @@
 package io.galaxsci.filter;
 
+import java.util.Date;
+import java.util.stream.Collectors;
+
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -7,9 +10,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import io.galaxsci.config.SecurityConstants;
+import io.galaxsci.service.CustomUserDetails;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
+
+import org.springframework.security.core.userdetails.User;
+
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	 private final AuthenticationManager authenticationManager;
@@ -32,11 +46,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	    @Override
 	    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 	                                            FilterChain filterChain, Authentication authentication) {
-	      /*  var user = ((User) authentication.getPrincipal());
+	        var user = ((CustomUserDetails) authentication.getPrincipal());
 
 	        var roles = user.getAuthorities()
 	            .stream()
-	            .map(GrantedAuthority::getAuthority)
+	            //.map(GrantedAuthority::getAuthority)
+	            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
 	            .collect(Collectors.toList());
 
 	        var signingKey = SecurityConstants.JWT_SECRET.getBytes();
@@ -51,6 +66,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	            .claim("rol", roles)
 	            .compact();
 
-	        response.addHeader(SecurityConstants.TOKEN_HEADER, SecurityConstants.TOKEN_PREFIX + token); */
+	        response.addHeader(SecurityConstants.TOKEN_HEADER, SecurityConstants.TOKEN_PREFIX + token); 
 	    }
 }

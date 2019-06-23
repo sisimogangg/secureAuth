@@ -30,12 +30,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		super.configure(auth);
+		//super.configure(auth);
 		
 		auth.userDetailsService(userDetailService).passwordEncoder(encodePWD());
+	
 	}
 	
-	@Override
+	
+	/*@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.csrf()
@@ -45,10 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
 		.authorizeRequests()
-		.antMatchers("/rest/**")
-		.authenticated()
-		.anyRequest()
+		.antMatchers("/api/**")
 		.permitAll()
+		.anyRequest()
+		.authenticated()
 		
 		.and()
 		
@@ -60,28 +62,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		.and()
 		
-		.authorizeRequests()
-		.antMatchers("/api/public")
-		.permitAll()
-		.anyRequest()
-		.authenticated()
-		
-		.and()
 		.addFilter(new JwtAuthenticationFilter(authenticationManager()))
 		.addFilter(new JwtAuthorizationFilter(authenticationManager()))
-		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		
-		.and()
-		.exceptionHandling()
-		.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
+		//.and()
+		
+		//.exceptionHandling()
+		//.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 		
 		//.formLogin()
 		//.permitAll();
 		
 		
 		
-	}
+	} */
+	
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and()
+            .csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/api/public").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+            .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+    
+    
 	
 	@Bean
 	public BCryptPasswordEncoder encodePWD() {

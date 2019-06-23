@@ -1,7 +1,5 @@
 package io.galaxsci.filter;
 
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
 
 import io.galaxsci.config.SecurityConstants;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -38,7 +36,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	                                    FilterChain filterChain) throws IOException, ServletException {
 	        var authentication = getAuthentication(request);
 	        if (authentication == null) {
-	            filterChain.doFilter(request, response);
+	            filterChain.doFilter(request, response); // invoking the next filter in the chain
 	            return;
 	        }
 
@@ -62,7 +60,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 
 	                var authorities = ((List<?>) parsedToken.getBody()
 	                    .get("rol")).stream()
-	                    .map(authority -> new SimpleGrantedAuthority((String) authority))
+	                    .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority))
 	                    .collect(Collectors.toList());
 
 	                if (StringUtils.isNotEmpty(username)) {
