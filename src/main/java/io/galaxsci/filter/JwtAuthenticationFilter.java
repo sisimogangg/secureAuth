@@ -50,8 +50,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	        var roles = user.getAuthorities()
 	            .stream()
-	            //.map(GrantedAuthority::getAuthority)
-	            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+	            .map(GrantedAuthority::getAuthority)
+	            //.map(role -> new SimpleGrantedAuthority("ROLE_" + role))
 	            .collect(Collectors.toList());
 
 	        var signingKey = SecurityConstants.JWT_SECRET.getBytes();

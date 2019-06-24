@@ -5,6 +5,7 @@ import io.galaxsci.config.SecurityConstants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	                                    FilterChain filterChain) throws IOException, ServletException {
 	        var authentication = getAuthentication(request);
 	        if (authentication == null) {
-	            filterChain.doFilter(request, response); // invoking the next filter in the chain
+	            filterChain.doFilter(request, response); // invoking the next filter in the c
 	            return;
 	        }
 
@@ -49,10 +50,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	        if (StringUtils.isNotEmpty(token) && token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 	            try {
 	                var signingKey = SecurityConstants.JWT_SECRET.getBytes();
-
-	                var parsedToken = Jwts.parser()
+	                
+	               var parsedToken = Jwts.parser()
 	                    .setSigningKey(signingKey)
 	                    .parseClaimsJws(token.replace("Bearer ", ""));
+	                    
 
 	                var username = parsedToken
 	                    .getBody()
@@ -60,9 +62,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 
 	                var authorities = ((List<?>) parsedToken.getBody()
 	                    .get("rol")).stream()
-	                    .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority))
+	                    .map(authority -> new SimpleGrantedAuthority((String) authority))
 	                    .collect(Collectors.toList());
-
+	                
+	                
 	                if (StringUtils.isNotEmpty(username)) {
 	                    return new UsernamePasswordAuthenticationToken(username, null, authorities);
 	                }
@@ -76,6 +79,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	                log.warn("Request to parse JWT with invalid signature : {} failed : {}", token, exception.getMessage());
 	            } catch (IllegalArgumentException exception) {
 	                log.warn("Request to parse empty or null JWT : {} failed : {}", token, exception.getMessage());
+	            } catch (Exception exception) {
+	            	log.warn("General Exception : {} failed : {}", token, exception.getMessage());
 	            }
 	        }
 

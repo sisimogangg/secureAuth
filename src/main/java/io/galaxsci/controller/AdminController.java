@@ -22,6 +22,7 @@ public class AdminController {
 	private BCryptPasswordEncoder passwordEncoder;
 	
 	//@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/add")
 	public String addUserByAdmin(@RequestBody User user) {
 		

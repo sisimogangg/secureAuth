@@ -1,6 +1,10 @@
 Manifest-Version: 1.0
-Build-Jdk-Spec: 11
+Built-By: thubelihle
+Build-Jdk: 11.0.2
 Implementation-Title: secure-auth
 Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: galaxsci.security
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/secure-auth
 Created-By: Maven Integration for Eclipse
 
