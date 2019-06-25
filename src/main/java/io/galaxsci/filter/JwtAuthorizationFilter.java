@@ -5,7 +5,6 @@ import io.galaxsci.config.SecurityConstants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.apache.commons.lang3.StringUtils;
@@ -53,8 +52,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	                
 	               var parsedToken = Jwts.parser()
 	                    .setSigningKey(signingKey)
-	                    .parseClaimsJws(token.replace("Bearer ", ""));
-	                    
+	                    .parseClaimsJws(token.replace("Bearer ", ""));	                    
 
 	                var username = parsedToken
 	                    .getBody()
@@ -81,6 +79,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	                log.warn("Request to parse empty or null JWT : {} failed : {}", token, exception.getMessage());
 	            } catch (Exception exception) {
 	            	log.warn("General Exception : {} failed : {}", token, exception.getMessage());
+	            	throw exception;
 	            }
 	        }
 
